@@ -16,6 +16,7 @@ use App\Http\Controllers\DecksController;
 |
 */
 
+
 Route::get('/', function () {
     return view('home');
 });

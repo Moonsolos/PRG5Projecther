@@ -1,15 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
     <div class="container mt-5">
         <div class="text-center">
             <h1 class="mb-4">One Piece Decks</h1>
             <p class="lead">This website was made to showcase the leaders of the One Piece TCG</p>
+            <p class="lead">You can only create new leaders after you logged in 3 times</p>
+            <p class="lead">You can only update and delete your own leaders</p>
+        </div>
+        <div class="text-center mb-4">
+            <a href="{{ route('decks.create') }}" class="btn btn-primary">Create Leader</a>
         </div>
         <!-- Search Bar -->
         <form class="mb-4">
             <div class="input-group">
-                <input type="text" class="form-control" id="searchInput" placeholder="Search for a trick...">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search for a leader..">
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="button" id="searchBtn">Search</button>
                 </div>
@@ -52,21 +60,22 @@
                                 <img class="img-fluid h-75" src="{{ asset('storage/' . $deck->thumbnail) }}" alt="Deck Image">
                                 <h1>{{ $deck->name }}</h1>
                             </a>
-                            <p>{{ $deck->colors }}</p>
+                            <p>{{ str_replace(',', ' ', $deck->colors) }}</p>
                             <form method="POST" action="{{ route('decks.delete', ['deck' => $deck->id]) }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="alert alert-danger">Verwijder</button>
+                                <button type="submit" class="alert alert-danger">Delete</button>
                             </form>
                         @else
                             <img class="img-fluid h-75" src="{{ asset('storage/' . $deck->thumbnail) }}" alt="Deck Image">
                             <h1>{{ $deck->name }}</h1>
-                            <p>{{ $deck->colors }}</p>
+                            <p>{{ str_replace(',', ' ', $deck->colors) }}</p>
                         @endcan
                     </div>
                 @endforeach
             </div>
         </div>
+
     </div>
 
     <script>
@@ -76,22 +85,24 @@
                 filterList(searchTerm);
             }
 
-            // Function to handle color filtering
+
             function handleColorFilter() {
-                let selectedColors = [];
-                $('input[type=checkbox]:checked').each(function () {
-                    selectedColors.push($(this).val());
-                });
+                let selectedColors = $('input[type=checkbox]:checked').map(function () {
+                    return $(this).val();
+                }).get();
 
                 if (selectedColors.length > 0) {
                     $('.deck-item').hide();
-                    selectedColors.forEach(function (color) {
-                        $('.deck-item[data-colors*=' + color + ']').show();
-                    });
+                    $('.deck-item').filter(function () {
+                        let itemColors = $(this).data('colors').toLowerCase().split(','); // Change split here
+                        return selectedColors.some(color => itemColors.includes(color));
+                    }).show();
                 } else {
                     $('.deck-item').show();
                 }
             }
+
+
 
             // Event listener for search button
             $('#searchBtn').on('click', function () {
@@ -126,4 +137,6 @@
             });
         }
     </script>
+
+
 @endsection
