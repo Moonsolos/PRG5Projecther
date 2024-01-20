@@ -56,22 +56,37 @@
                 @foreach($decks as $deck)
                     <div class="col-md-4 deck-item" data-colors="{{ $deck->colors }}">
                         @can('edit-deck', $deck)
-                            <a href="{{ route('decks.edit', ['deck' => $deck->id]) }}">
-                                <img class="img-fluid h-75" src="{{ asset('storage/' . $deck->thumbnail) }}" alt="Deck Image">
-                                <h1>{{ $deck->name }}</h1>
-                            </a>
-                            <p>{{ str_replace(',', ' ', $deck->colors) }}</p>
-                            <form method="POST" action="{{ route('decks.delete', ['deck' => $deck->id]) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="alert alert-danger">Delete</button>
-                            </form>
+                            @if ($deck->status === 'active')
+
+                                <a href="{{ route('decks.edit', ['deck' => $deck->id]) }}">
+                                    <img class="img-fluid h-75" src="{{ asset('storage/' . $deck->thumbnail) }}" alt="Deck Image">
+                                    <h1>{{ $deck->name }}</h1>
+                                </a>
+                                <p>{{ str_replace(',', ' ', $deck->colors) }}</p>
+                                <form method="POST" action="{{ route('decks.toggleStatus', ['deck' => $deck->id]) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">Active</button>
+                                </form>
+                                <form method="POST" action="{{ route('decks.delete', ['deck' => $deck->id]) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="alert alert-danger">Delete</button>
+                                </form>
+                            @else
+
+
+                                <form method="POST" action="{{ route('decks.toggleStatus', ['deck' => $deck->id]) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">Inactive</button>
+                                </form>
+                            @endif
                         @else
                             <img class="img-fluid h-75" src="{{ asset('storage/' . $deck->thumbnail) }}" alt="Deck Image">
                             <h1>{{ $deck->name }}</h1>
                             <p>{{ str_replace(',', ' ', $deck->colors) }}</p>
                         @endcan
                     </div>
+
                 @endforeach
             </div>
         </div>

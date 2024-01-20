@@ -97,4 +97,12 @@ class DecksController extends Controller
 
         return redirect()->route('decks.index')->with('success', 'Deck deleted successfully!');
     }
+    public function toggleStatus(Deck $deck)
+    {
+
+        $deck->status = $deck->status === 'active' ? 'inactive' : 'active';
+        $deck->save();
+
+        return redirect()->back();
+    }
 }

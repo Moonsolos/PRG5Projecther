@@ -43,8 +43,13 @@ Route::middleware([CheckLoginsForCrud::class])->group(function () {
 
 Route::get('/decks', [DecksController::class, 'index'])->name('decks.index');
 
+
 require __DIR__.'/auth.php';
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/index', [DecksController::class, 'index'])->name('back');
+Route::post('/decks/{deck}/toggle-status', [DecksController::class, 'toggleStatus'])->name('decks.toggleStatus');
+
+

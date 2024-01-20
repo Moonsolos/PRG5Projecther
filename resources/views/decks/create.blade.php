@@ -2,10 +2,12 @@
 
 @section('content')
     <div class="container mt-5">
+        <a href="{{ route('back') }}" class="btn btn-primary">Back to decks</a>
+    </div>
+    <div class="container mt-5">
         <div class="text-center">
             <h1 class="mb-4">Add a new One Piece Leader</h1>
         </div>
-        <!-- Form -->
         <form action="{{ route('decks.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="form-group">

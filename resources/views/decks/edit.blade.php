@@ -2,9 +2,12 @@
 
 @section('content')
     <div class="container mt-5">
+        <a href="{{ route('back') }}" class="btn btn-primary">Back to decks</a>
         <div class="text-center">
             <h1 class="mb-4">Update Deck</h1>
         </div>
+
+
 
         <form action="{{ route('decks.update', ['deck' => $deck->id]) }}" method="post" enctype="multipart/form-data">
             @csrf
